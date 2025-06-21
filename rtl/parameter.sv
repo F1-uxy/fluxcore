@@ -1,0 +1,11 @@
+`define OP_NOP 0'b0000_0001
+`define OP_ADD 0'b0000_0010
+`define OP_SUB 0'b0000_0011
+`define OP_AND 0'b0000_0100
+`define OP_OR  0'b0000_0101
+`define OP_XOR 0'b0000_0110
+`define OP_LDA 0'b0000_0111
+`define OP_STA 0'b0000_1000
+`define OP_JMP 0'b0000_1001
+`define OP_JZ  0'b0000_1010
+`define OP_HLT 0'b0000_1011

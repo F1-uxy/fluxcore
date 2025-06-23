@@ -1,19 +1,19 @@
 module registers (
-    input wire clk;
-    input wire write_en;
-    input wire out_en;
-    input wire [N-1:0] data_in;
-    input wire [N-1:0] sel_in;
-    input wire [N-1:0] sel_out;
+    input logic clk;
+    input logic write_en;
+    input logic out_en;
+    input logic [N-1:0] data_in;
+    input logic [2:0] sel_in;
+    input logic [2:0] sel_out;
 
-    output wire [N-1:0] data_out;
-    output wire [N-1:0] rega;
-    output wire [N-1:0] regb;
+    output logic [N-1:0] data_out;
+    output logic [N-1:0] rega;
+    output logic [N-1:0] regb;
 );
 
 parameter N = 8;
 
-reg [N-1:0] registers[N-1:0];
+reg [N-1:0] registers[0:7];
 
 always @(posedge(clk)) begin
     if(write_en)

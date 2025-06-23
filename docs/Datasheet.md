@@ -1,6 +1,6 @@
 ### 8 Bit CPU
 
-4-bit opcode : 4-bit memory addressing
+4-bit opcode : 4-bit register addressing + 8 bit address
 | Mnemonic | Opcode | Example            |
 | -------- | ------ | ------------------ |
 | nop      | 0x00   | nop                |

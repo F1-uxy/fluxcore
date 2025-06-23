@@ -1,13 +1,13 @@
 module alu (
-    input wire enable,
-    input wire clk,
-    input wire [2:0] mode,
-    input wire [N-1:0] in_a,
-    input wire [N-1:0] in_b,
+    input logic enable,
+    input logic clk,
+    input logic [3:0] mode,
+    input logic [N-1:0] in_a,
+    input logic [N-1:0] in_b,
 
-    output wire [N-1:0] out,
-    output wire flag_zero,
-    output wire flag_carry
+    output logic [N-1:0] out,
+    output logic flag_zero,
+    output logic flag_carry
 );
 
 `include "rtl/parameters.sv"
@@ -25,7 +25,7 @@ always @(posedge clk) begin
             `OP_OR : out_buff = in_a | in_b;
             `OP_XOR: out_buff = in_a ^ in_b;
             default: 'hxx;
-        endcase
+        endcase8=
     end
 
     flag_zero = (out_buff == 0) ? 1 : 0;

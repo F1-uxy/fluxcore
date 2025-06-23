@@ -1,0 +1,22 @@
+# Verilator build output
+obj_dir/
+logs/
+*.vcd
+*.fst
+*.saif
+
+# C++ build artifacts
+*.o
+*.d
+*.out
+*.exe
+*.vexe
+*.log
+*.vdb
+
+# Editor and OS files
+*.swp
+*.bak
+*~
+.DS_Store
+.vscode/

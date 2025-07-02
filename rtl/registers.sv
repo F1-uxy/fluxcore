@@ -13,16 +13,16 @@ module gp_registers (
 
 parameter N = 8;
 
-reg [N-1:0] registers[0:7];
+reg [N-1:0] regs[0:7];
 
 always @(posedge(clk)) begin
     if(write_en)
-        registers[sel_in] = data_in;
+        regs[sel_in] = data_in;
 end
 
-assign data_out = (out_en) ? registers[sel_in] : 'bz;
+assign data_out = (out_en) ? regs[sel_in] : 'bz;
 
-assign rega = registers[0];
-assign regb = registers[1];
+assign rega = regs[0];
+assign regb = regs[1];
     
 endmodule

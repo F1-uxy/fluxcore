@@ -11,25 +11,6 @@
     <li> T8 - CYCLE_FINAL           - Final cleanup; ensure all registers are stable; prepare for next instruction
 </ul>
 
-#### OP_ADD:
-<ol>
-    <li> Fetch PC
-    <li> Fetch instruction
-    <li> Load A and B - Enable read from REG[x] -> alu_x; Set alu_up to OP_ADD
-    <li> ALU execute - Alu performs addition
-    <li> Write result to register - Enable reg write; REG[x] <- alu_out
-    <li> STATE_NEXT
-</ol>
-
-#### OP_SUB:
-<ol>
-    <li> Fetch PC
-    <li> Fetch instruction
-    <li> Load A and B - Enable read from REG[x] -> alu_x; Set alu_up to OP_ADD
-    <li> ALU execute - Alu performs addition
-    <li> Write result to register - Enable reg write; REG[x] <- alu_out
-    <li> STATE_NEXT
-</ol>
 
 | Instruction | T3        | T4        | T5        | T6  | T7  |
 | ----------- | --------- | --------- | --------- | --- | --- |

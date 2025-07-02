@@ -1,4 +1,4 @@
-module registers (
+module gp_registers (
     input logic clk;
     input logic write_en;
     input logic out_en;

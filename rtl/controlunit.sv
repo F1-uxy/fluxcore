@@ -12,16 +12,6 @@ module controlunit (
 
 initial cycle = 0;
 
-always_comb begin
-    casez (instruction)
-        `PATTERN_SYS:
-        `PATTERN_ALU:
-        `PATTERN_MEM:
-        `PATTERN_JMP:
-        default: 
-    endcase
-end
-
 always @(posedge clk) begin
     case (cycle)
         `T1: state <= `STATE_FETCH_PC;
@@ -30,20 +20,26 @@ always @(posedge clk) begin
             case (opcode)
                 `OP_NOP: state <= `STATE_NEXT;
                 `OP_HLT: state <= `STATE_HALT;
-                `OP_ADD: state <= `STATE_ALU_EXEC;
-                default: state <- `STATE_NEXT;
+                `OP_ALU: state <= `STATE_ALU_EXEC;
+                `OP_JMP: state <= `STATE_FETCH_PC;
+                `OP_LDI: state <= `STATE_FETCH_PC;
+                `OP_MOV: state <= `STATE_MOV_FETCH;
+                default: state <= `STATE_NEXT;
             endcase
         end
         `T4: begin
             case (opcode)
-                `OP_ADD: state <= STATE_ALU_OUT;
-                default: 
+                `OP_ALU: state <= `STATE_ALU_STORE;
+                `OP_JMP: state <= `STATE_JUMP;
+                `OP_LDI: state <= `STATE_SET_REG;
+                `OP_MOV: state <= `STATE_MOV_LOAD;
+                default: state <= `STATE_NEXT;
             endcase
         end
         `T5: begin
             case (opcode)
-                `OP_ADD: state <= STATE_REG_STORE; 
-                default: 
+                `OP_MOV: state <= `STATE_MOV__STORE;
+                default: state <= `STATE_NEXT;
             endcase
         end
         default: 

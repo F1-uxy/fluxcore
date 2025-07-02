@@ -13,10 +13,6 @@ module cpu (
 // ============
 assign clk_b = ~clk;
 
-// ============
-// Flags
-// ============
-
 wire flag_zero;
 wire flag_carry;
 

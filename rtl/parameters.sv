@@ -20,6 +20,7 @@
 `define PATTERN_MEM 8'b0010_????
 `define PATTERN_JMP 8'b0011_????
 
+`define STATE_ALU 8'b0010_0011
 
 `define T1  4'd0
 `define T2  4'd1

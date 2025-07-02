@@ -14,8 +14,6 @@ module alu #(
     output logic flag_carry
 );
 
-
-
 reg [N-1:0] out_buff;
 
 always @(posedge clk) begin
@@ -29,10 +27,9 @@ always @(posedge clk) begin
             default: out_buff <= 8'b0000_0000;
         endcase
     end
-
-    flag_zero <= (out_buff == 0) ? 1 : 0;
 end
 
+assign flag_zero = (out_buff == 0) ? 1 : 0;
 assign out = out_buff;
     
 endmodule

@@ -1,3 +1,5 @@
+`include "rtl/parameters.sv"
+
 module cpu (
     input logic clk,
     input logic reset,
@@ -20,18 +22,30 @@ wire flag_carry;
 // Control Signals
 //  - c_rin = Registers in
 //  - c_rou = Registers out
+
 //  - c_aen = Alu enable
 //  - c_aou = Alu enable output read onto bus
+
 //  - c_mae = Memory Address Register enable
+//  - c_ien = Instruction Regierster enable
+
 //  - c_pce = Program counter enable
+//  - c_pcw = Program counter write
 //  - c_pcd = Program counter decrement
 //  - c_pco = Program counter enable output read onto bus
+
+//  - c_spe = Stack pointer enable
+//  - c_spw = Stack pointer write
+//  - c_spd = Stack pointer decrement
+//  - c_spo = Stack pointer enable output read onto bus
 // ===============
 
 logic c_rin, c_rou;
 logic c_aen, c_aou;
-logic c_mai, c_ien;
+logic c_mae, c_ien;
 logic c_pce, c_pcd, c_pco;
+logic c_spe, c_spd, c_spo;
+
 
 
 // ============
@@ -55,6 +69,7 @@ gp_registers m_registers (
     .regb(regb_out)
 );
 
+// Memory Address Register
 register m_mar (
     .clk(),
     .enable(c_mae),
@@ -63,6 +78,7 @@ register m_mar (
     .data_out(addr_bus)
 );
 
+// Instruction Register
 logic [7:0] ireg_out;
 register m_ireg (
     .clk(),
@@ -79,9 +95,9 @@ register m_ireg (
 logic [7:0] pc_out;
 
 counter m_pc(
-    .clk(),
+    .clk(c_pce & internal_clk),
     .in(bus),
-    .sel_in(c_pce),
+    .sel_in(c_pcw),
     .reset(reset),
     .dec(c_pcd),
     .out(pc_out)
@@ -93,12 +109,33 @@ tristate_buffer m_pc_buff(
     .out(bus)
 )
 
+// ===============
+// Stack Pointer
+// ===============
+
+logic [7:0] sp_out;
+
+counter m_sp(
+    .clk(c_spe & internal_clk),
+    .in(bus),
+    .sel_in(c_spw),
+    .reset(reset),
+    .dec(c_spd),
+    .out(pc_out)
+)
+
+tristate_buffer m_sp_buff(
+    .enable(c_spo),
+    .in(sp_out),
+    .out(bus)
+)
+
 // ============
 // ALU
 // ============
 
-wire [7:0] alu_out;
-wire [2:0] alu_mode;
+logic [7:0] alu_out;
+logic [2:0] alu_mode;
 
 alu m_alu(
     .clk(),
@@ -115,6 +152,44 @@ tristate_buffer m_alu_buff(
     .enable(c_aou),
     .in(alu_out),
     .out(bus)
+)
+
+// =============
+// Control Logic
+// =============
+
+logic next_state;
+
+logic [7:0] instruction;
+logic [7:0] state;
+logic [3:0] cycle;
+logic [3:0] opcode;
+
+logic [2:0] operand1;
+logic [2:0] operand2;
+
+assign next_state = (state == `STATE_NEXT) | reset;
+assign instruction = ireg_out;
+
+assign operand1 = instruction[5:3];
+assign operand2 = instruction[2:0];
+
+assign c_rin = (state == `STATE_ALU_STORE) | 
+               (state == `STATE_SET_REG);
+
+assign c_rou = 0;
+
+assign c_aen = (state == `STATE_ALU_EXEC);
+
+assign 
+
+controlunit m_controlunit(
+    .clk(cycle_clk),
+    .reset(next_state),
+    .instruction(instruction),
+    .state(state),
+    .cycle(cycle),
+    .opcode(opcode)
 )
 
 endmodule

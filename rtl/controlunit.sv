@@ -1,10 +1,12 @@
+`include "rtl/parameters.sv"
+
 module controlunit (
     input logic clk,
     input logic reset,
     input logic [7:0] instruction,
 
     output logic[7:0] state,
-    output logic[7:0] cycle,
+    output logic[3:0] cycle,
     output logic[3:0] opcode
 );
 
@@ -13,6 +15,12 @@ module controlunit (
 initial cycle = 0;
 
 always @(posedge clk) begin
+
+    casez (instruction)
+        `PATTERN_ALU: opcode = `OP_ALU;
+        default: 
+    endcase
+
     case (cycle)
         `T1: state <= `STATE_FETCH_PC;
         `T2: state <= `STATE_FETCH_INST;
@@ -38,13 +46,16 @@ always @(posedge clk) begin
         end
         `T5: begin
             case (opcode)
-                `OP_MOV: state <= `STATE_MOV__STORE;
+                `OP_MOV: state <= `STATE_MOV_STORE;
                 default: state <= `STATE_NEXT;
             endcase
         end
         default: 
     endcase
+end
 
+always @(posedge(reset)) begin
+    cycle = 0;
 end
     
 endmodule

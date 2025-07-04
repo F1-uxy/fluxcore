@@ -1,0 +1,51 @@
+#ifndef PARAMETERS_H
+#define PARAMETERS_H
+
+#define OP_NOP 0b00000000
+#define OP_HLT 0b00000001
+
+#define OP_LDI 0b00100000
+#define OP_STI 0b00100001
+#define OP_LDA 0b00100010
+#define OP_STA 0b00100011
+
+#define OP_JMP 0b00110000
+#define OP_JZ  0b00110001
+
+#define OP_ALU 0b01000000
+#define OP_MOV 0b10000000
+
+#define PATTERN_SYS 0b00000000
+#define PATTERN_ALU 0b01000000
+#define PATTERN_MEM 0b00100000
+#define PATTERN_JMP 0b00110000
+
+#define T1  4'b0000
+#define T2  4'b0001
+#define T3  4'b0010
+#define T4  4'b0011
+#define T5  4'b0100
+#define T6  4'b0101
+#define T7  4'b0110
+#define T8  4'b0111
+
+#define STATE_NEXT       0b00000000
+#define STATE_FETCH_PC   0b00000001
+#define STATE_FETCH_INST 0b00000010
+#define STATE_ALU_EXEC   0b00010011
+#define STATE_ALU_STORE  0b00010100
+#define STATE_MOV_FETCH  0b00100101
+#define STATE_MOV_LOAD   0b00100110
+#define STATE_MOV_STORE  0b00100111
+#define STATE_JUMP       0b00111000
+#define STATE_SET_REG    0b01001001
+#define STATE_HALT       0b01011010
+
+
+#define ALU_ADD 0b000
+#define ALU_SUB 0b001
+#define ALU_AND 0b010
+#define ALU_OR  0b011
+#define ALU_XOR 0b100
+
+#endif

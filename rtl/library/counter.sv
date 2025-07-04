@@ -1,5 +1,5 @@
 module counter #(
-    parameter WIDTH = 8;
+    parameter WIDTH = 8
 ) (
     input logic clk,
     input logic [WIDTH-1:0] in,
@@ -12,18 +12,18 @@ module counter #(
 
 initial out = 0;
 
-always @(posedge(clk)) begin
+always @(posedge(clk) or posedge reset) begin
     if (sel_in) begin
         out <= in;
     end
     else if (dec)
         out <= out - 1;
     else
-        out <= out + 1;    
-end
-    
-always @(posedge(reset)) begin
-    data_out <= {WIDTH{1'b0}};
+        out <= out + 1;
+
+    if (reset) begin
+        out <= {WIDTH{1'b0}};
+    end
 end
 
 endmodule

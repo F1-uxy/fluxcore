@@ -1,5 +1,5 @@
 module tristate_buffer #(
-    parameter WIDTH = 8;
+    parameter WIDTH = 8
 ) (
     input logic [WIDTH-1:0] in,
     input logic enable,

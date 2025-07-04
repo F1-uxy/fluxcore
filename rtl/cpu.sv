@@ -1,4 +1,8 @@
 `include "rtl/parameters.sv"
+`include "rtl/library/counter.sv"
+`include "rtl/library/register.sv"
+`include "rtl/library/tristate_buffer.sv"
+
 
 module cpu (
     input logic clk,
@@ -57,7 +61,7 @@ logic [7:0] rega_out;
 logic [7:0] regb_out;
 
 gp_registers m_registers (
-    .clk(),
+    .clk(clk),
     .write_en(c_rin),
     .out_en(c_rou),
     .data_in(bus),
@@ -69,7 +73,7 @@ gp_registers m_registers (
 
 // Memory Address Register
 register m_mar (
-    .clk(),
+    .clk(clk),
     .enable(c_mae),
     .reset(reset),
     .data_in(bus),
@@ -79,7 +83,7 @@ register m_mar (
 // Instruction Register
 logic [7:0] ireg_out;
 register m_ireg (
-    .clk(),
+    .clk(clk),
     .enable(c_ien),
     .reset(reset),
     .data_in(bus),
@@ -99,13 +103,13 @@ counter m_pc(
     .reset(reset),
     .dec(c_pcd),
     .out(pc_out)
-)
+);
 
 tristate_buffer m_pc_buff(
     .enable(c_pco),
     .in(pc_out),
     .out(bus)
-)
+);
 
 // ===============
 // Stack Pointer
@@ -120,13 +124,13 @@ counter m_sp(
     .reset(reset),
     .dec(c_spd),
     .out(pc_out)
-)
+);
 
 tristate_buffer m_sp_buff(
     .enable(c_spo),
     .in(sp_out),
     .out(bus)
-)
+);
 
 // ============
 // ALU
@@ -136,11 +140,11 @@ logic [7:0] alu_out;
 logic [2:0] alu_mode;
 
 alu m_alu(
-    .clk(),
+    .clk(clk),
     .enable(c_aen),
     .mode(alu_mode),
     .in_a(rega_out),
-    .in_a(regb_out),
+    .in_b(regb_out),
     .out(alu_out),
     .flag_carry(flag_carry),
     .flag_zero(flag_zero)
@@ -150,7 +154,7 @@ tristate_buffer m_alu_buff(
     .enable(c_aou),
     .in(alu_out),
     .out(bus)
-)
+);
 
 // =============
 // Control Logic
@@ -193,12 +197,12 @@ assign c_pco = (state == `STATE_FETCH_PC);
 
 
 controlunit m_controlunit(
-    .clk(cycle_clk),
+    .clk(clk),
     .reset(next_state),
     .instruction(instruction),
     .state(state),
     .cycle(cycle),
     .opcode(opcode)
-)
+);
 
 endmodule

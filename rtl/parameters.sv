@@ -9,12 +9,12 @@
 `define OP_JMP 8'b0011_0000
 `define OP_JZ  8'b0011_0001
 
-`define OP_ALU 8'b01_00_000
-`define OP_MOV 8'b10_00_000
+`define OP_ALU 8'b01_000_000
+`define OP_MOV 8'b10_000_000
 
 
 `define PATTERN_SYS 8'b0000_????
-`define PATTERN_ALU 8'b0001_????
+`define PATTERN_ALU 8'b01_???_???
 `define PATTERN_MEM 8'b0010_????
 `define PATTERN_JMP 8'b0011_????
 
@@ -30,7 +30,15 @@
 `define STATE_NEXT       8'b0000_0000
 `define STATE_FETCH_PC   8'b0000_0001
 `define STATE_FETCH_INST 8'b0000_0010
-`define STATE_ALU        8'b0010_0011
+`define STATE_ALU_EXEC   8'b0001_0011
+`define STATE_ALU_STORE  8'b0001_0100
+`define STATE_MOV_FETCH  8'b0010_0101
+`define STATE_MOV_LOAD   8'b0010_0110
+`define STATE_MOV_STORE  8'b0010_0111
+`define STATE_JUMP       8'b0011_1000
+`define STATE_SET_REG    8'b0100_1001
+`define STATE_HALT       8'b0101_1010
+
 
 `define ALU_ADD 3'b000
 `define ALU_SUB 3'b001

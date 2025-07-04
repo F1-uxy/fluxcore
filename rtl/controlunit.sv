@@ -1,4 +1,4 @@
-`include "rtl/parameters.sv"
+`include "parameters.sv"
 
 module controlunit (
     input logic clk,
@@ -7,18 +7,18 @@ module controlunit (
 
     output logic[7:0] state,
     output logic[3:0] cycle,
-    output logic[3:0] opcode
+    output logic[7:0] opcode
 );
 
 `include "rtl/parameters.sv"
 
 initial cycle = 0;
 
-always @(posedge clk) begin
+always @(posedge clk or posedge reset) begin
 
     casez (instruction)
-        `PATTERN_ALU: opcode = `OP_ALU;
-        default: 
+        `PATTERN_ALU: opcode <= `OP_ALU;
+        default: opcode <= instruction;
     endcase
 
     case (cycle)
@@ -50,12 +50,14 @@ always @(posedge clk) begin
                 default: state <= `STATE_NEXT;
             endcase
         end
-        default: 
+        default: state <= `STATE_NEXT;
     endcase
-end
 
-always @(posedge(reset)) begin
-    cycle = 0;
+    if (reset) begin
+        cycle <= 0;
+    end else begin
+        cycle <= (cycle > 4) ? 0 : cycle + 1;
+    end
 end
     
 endmodule

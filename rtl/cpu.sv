@@ -53,7 +53,6 @@ logic c_spe, c_spd, c_spo;
 // ============
 
 logic [2:0] sel_in;
-logic [2:0] sel_out;
 logic [7:0] rega_out;
 logic [7:0] regb_out;
 
@@ -63,7 +62,6 @@ gp_registers m_registers (
     .out_en(c_rou),
     .data_in(bus),
     .sel_in(sel_in),
-    .sel_out(sel_out),
     .data_out(bus),
     .rega(rega_out),
     .regb(regb_out)
@@ -181,7 +179,18 @@ assign c_rou = 0;
 
 assign c_aen = (state == `STATE_ALU_EXEC);
 
-assign 
+assign c_aou = (state == `STATE_ALU_STORE);
+
+assign c_mae = (state == `STATE_FETCH_PC);
+
+assign c_ien = (state == `STATE_FETCH_PC);
+
+assign c_pce = (state == `STATE_FETCH_INST);
+
+assign c_pcd = 0;
+
+assign c_pco = (state == `STATE_FETCH_PC);
+
 
 controlunit m_controlunit(
     .clk(cycle_clk),

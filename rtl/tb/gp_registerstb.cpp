@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
-#include "Vregisters.h"
+#include "Vgp_registers.h"
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
@@ -10,7 +10,7 @@
 vluint64_t sim_time = 0;
 
 
-int write_to_reg(Vregisters* reg, VerilatedVcdC* m_trace, uint8_t value, uint8_t reg_count)
+int write_to_reg(Vgp_registers* reg, VerilatedVcdC* m_trace, uint8_t value, uint8_t reg_count)
 {
     if(reg == NULL)
     {
@@ -33,7 +33,7 @@ int write_to_reg(Vregisters* reg, VerilatedVcdC* m_trace, uint8_t value, uint8_t
     return 0;
 }
 
-uint8_t read_from_reg(Vregisters* reg, VerilatedVcdC* m_trace, uint8_t reg_count)
+uint8_t read_from_reg(Vgp_registers* reg, VerilatedVcdC* m_trace, uint8_t reg_count)
 {
     if(reg == NULL)
     {
@@ -58,7 +58,7 @@ uint8_t read_from_reg(Vregisters* reg, VerilatedVcdC* m_trace, uint8_t reg_count
 
 int main(int argc, char **argv) {
     Verilated::commandArgs(argc, argv);
-    Vregisters* reg = new Vregisters;
+    Vgp_registers* reg = new Vgp_registers;
 
     Verilated::traceEverOn(true);  // Enable VCD tracing
     VerilatedVcdC* m_trace = new VerilatedVcdC;

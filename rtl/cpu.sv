@@ -19,8 +19,11 @@ module cpu (
 // ============
 assign clk_b = ~clk;
 
+/* verilator lint_off UNUSEDSIGNAL */
 wire flag_zero;
+/* verilator lint_off UNUSEDSIGNAL */
 wire flag_carry;
+
 
 // ===============
 // Control Signals
@@ -47,10 +50,8 @@ wire flag_carry;
 logic c_rin, c_rou;
 logic c_aen, c_aou;
 logic c_mae, c_ien;
-logic c_pce, c_pcd, c_pco;
-logic c_spe, c_spd, c_spo;
-
-
+logic c_pce, c_pcd, c_pco, c_pcw;
+logic c_spe, c_spd, c_spo, c_spw;
 
 // ============
 // Registers
@@ -97,7 +98,7 @@ register m_ireg (
 logic [7:0] pc_out;
 
 counter m_pc(
-    .clk(c_pce & internal_clk),
+    .clk(c_pce & clk),
     .in(bus),
     .sel_in(c_pcw),
     .reset(reset),
@@ -118,7 +119,7 @@ tristate_buffer m_pc_buff(
 logic [7:0] sp_out;
 
 counter m_sp(
-    .clk(c_spe & internal_clk),
+    .clk(c_spe & clk),
     .in(bus),
     .sel_in(c_spw),
     .reset(reset),
@@ -165,7 +166,7 @@ logic next_state;
 logic [7:0] instruction;
 logic [7:0] state;
 logic [3:0] cycle;
-logic [3:0] opcode;
+logic [7:0] opcode;
 
 logic [2:0] operand1;
 logic [2:0] operand2;
@@ -195,9 +196,20 @@ assign c_pcd = 0;
 
 assign c_pco = (state == `STATE_FETCH_PC);
 
+assign c_pco = 0;
+
+assign c_pcw = 0;
+
+assign c_spe = 0;
+
+assign c_spd = 0;
+
+assign c_spo = 0;
+
+assign c_spw = 0;
 
 controlunit m_controlunit(
-    .clk(clk),
+    .clk(clk_b),
     .reset(next_state),
     .instruction(instruction),
     .state(state),

@@ -8,7 +8,7 @@ module cpu (
     input logic clk,
     input logic reset,
     output logic [7:0] addr_bus,
-    output logic clk_b,
+    output logic mem_clk,
 
     inout logic [7:0] bus
 );
@@ -17,13 +17,28 @@ module cpu (
 // Clocks:
 //   - clk_b = inverted clock for control unit
 // ============
-assign clk_b = ~clk;
+logic cycle_clk     = 0;
+logic internal_clk  = 0;
+logic [2:0] cnt     = 3'b100;
+logic halted        = 0;
 
 /* verilator lint_off UNUSEDSIGNAL */
 wire flag_zero;
 /* verilator lint_off UNUSEDSIGNAL */
 wire flag_carry;
 
+always_ff @(posedge clk) begin
+  if (!halted) begin
+    {cycle_clk, mem_clk, internal_clk} <= cnt;
+
+    case (cnt)
+      3'b100: cnt <= 3'b010;
+      3'b010: cnt <= 3'b001;
+      3'b001: cnt <= 3'b100;
+      default: cnt <= 3'b100; // safety fallback
+    endcase
+  end
+end
 
 // ===============
 // Control Signals
@@ -62,7 +77,7 @@ logic [7:0] rega_out;
 logic [7:0] regb_out;
 
 gp_registers m_registers (
-    .clk(clk),
+    .clk(internal_clk),
     .write_en(c_rin),
     .out_en(c_rou),
     .data_in(bus),
@@ -74,7 +89,7 @@ gp_registers m_registers (
 
 // Memory Address Register
 register m_mar (
-    .clk(clk),
+    .clk(internal_clk),
     .enable(c_mae),
     .reset(reset),
     .data_in(bus),
@@ -84,7 +99,7 @@ register m_mar (
 // Instruction Register
 logic [7:0] ireg_out;
 register m_ireg (
-    .clk(clk),
+    .clk(internal_clk),
     .enable(c_ien),
     .reset(reset),
     .data_in(bus),
@@ -124,7 +139,7 @@ counter m_sp(
     .sel_in(c_spw),
     .reset(reset),
     .dec(c_spd),
-    .out(pc_out)
+    .out(sp_out)
 );
 
 tristate_buffer m_sp_buff(
@@ -141,7 +156,7 @@ logic [7:0] alu_out;
 logic [2:0] alu_mode;
 
 alu m_alu(
-    .clk(clk),
+    .clk(internal_clk),
     .enable(c_aen),
     .mode(alu_mode),
     .in_a(rega_out),
@@ -209,7 +224,7 @@ assign c_spo = 0;
 assign c_spw = 0;
 
 controlunit m_controlunit(
-    .clk(clk_b),
+    .clk(cycle_clk),
     .reset(next_state),
     .instruction(instruction),
     .state(state),
